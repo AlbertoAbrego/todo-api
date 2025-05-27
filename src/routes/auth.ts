@@ -7,10 +7,7 @@ router.post('/', (req, res) => {
     const { username, password } = req.body
 
     // User simulation
-    if (
-        (username !== 'admin' && username !== 'notadmin') ||
-        password !== '1234'
-    ) {
+    if (password !== '1234') {
         return res.status(401).json({ error: 'Invalid credentials' })
     }
 

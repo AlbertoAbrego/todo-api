@@ -18,8 +18,8 @@ A simple API REST to manage tasks (ToDos), developed with Typescript, Express an
 
 ```bash
 # Clone repository
-git clone https://github.com/tuusuario/todo-api-ts.git
-cd todo-api-ts
+git clone https://github.com/AlbertoAbrego/todo-api
+cd todo-api
 
 # Install dependencies
 npm install
@@ -40,6 +40,10 @@ npm run build
 ---
 
 ## Authentication
+
+Admin user: 'admin'
+Normal user: any text
+Password: '1234' always
 
 Login path:
 
@@ -69,8 +73,11 @@ Authorization: Bearer <token>
 ### `/api/todos` (protected with JWT)
 
 -   `GET /` - List all ToDos
+-   `GET /:id` - Get ToDo by Id
 -   `POST /` - Create new ToDo
 -   `PUT /:id` - Toggle ToDo completed
+-   `PATCH /:id` - Change ToDo title
+-   `DELETE /completed` - Delete all ToDos Completed (only admin)
 -   `DELETE /:id` - Delete ToDo
 
 ---

@@ -61,6 +61,27 @@
             }
         },
         "/todos/{id}": {
+            "get": {
+                "summary": "Get Todo by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todo found"
+                    },
+                    "404": {
+                        "description": "Todo not found"
+                    }
+                }
+            },
             "put": {
                 "summary": "Toggle a todo's completed status",
                 "parameters": [
@@ -73,6 +94,43 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Todo updated"
+                    },
+                    "404": {
+                        "description": "Todo not found"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update a todo's title",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["title"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Todo updated"
@@ -106,10 +164,10 @@
         },
         "/todos/completed": {
             "delete": {
-                "summary": "Delete completed todos",
+                "summary": "Delete all completed todos",
                 "responses": {
                     "200": {
-                        "description": "Todos completed deleted"
+                        "description": "Completed todos deleted"
                     }
                 }
             }
