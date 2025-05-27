@@ -1,0 +1,118 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ToDo API",
+        "version": "1.0.0",
+        "description": "API to manage a simple ToDo list application."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api"
+        }
+    ],
+    "paths": {
+        "/todos": {
+            "get": {
+                "summary": "Get all todos or filter by completed",
+                "parameters": [
+                    {
+                        "name": "completed",
+                        "in": "query",
+                        "description": "Filter by completed (true/false)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["true", "false"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of todos"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new todo",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["title"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Todo created"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/todos/{id}": {
+            "put": {
+                "summary": "Toggle a todo's completed status",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todo updated"
+                    },
+                    "404": {
+                        "description": "Todo not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Todo by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Todo deleted"
+                    },
+                    "404": {
+                        "description": "Todo not found"
+                    }
+                }
+            }
+        },
+        "/todos/completed": {
+            "delete": {
+                "summary": "Delete completed todos",
+                "responses": {
+                    "200": {
+                        "description": "Todos completed deleted"
+                    }
+                }
+            }
+        }
+    }
+}
