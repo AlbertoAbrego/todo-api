@@ -20,10 +20,7 @@ export const authenticateToken = (
     }
 
     try {
-        const user = jwt.verify(
-            token,
-            process.env.ACCESS_TOKEN_SECRET || 'secretKey'
-        )
+        const user = jwt.verify(token, process.env.JWT_SECRET || 'secretKey')
         req.user = user
         next()
     } catch (err) {
