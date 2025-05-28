@@ -40,13 +40,11 @@ npm run build
 ---
 
 ## Authentication
-
-# Admin user: 'admin'
-
-# Normal user: any text
-
-# Password: '1234' always
-
+```
+Admin user: 'admin'
+Normal user: any text
+Password: '1234'  <- always
+```
 Login path:
 
 ```
