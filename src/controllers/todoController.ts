@@ -5,13 +5,14 @@ import { mapTodo } from '../utils/mapTodo'
 
 export const getTodos = async (req: Request, res: Response) => {
     const { completed } = req.query
-    const todos = await TodoModel.find()
-    // if (completed === 'true' || completed === 'false') {
-    //     const filtered = todos.filter(
-    //         (todo) => todo.completed === (completed === 'true')
-    //     )
-    //     return res.json(filtered)
-    // }
+    let todos
+    if (completed === 'true') {
+        todos = await TodoModel.find({ completed: true })
+    } else if (completed === 'false') {
+        todos = await TodoModel.find({ completed: false })
+    } else {
+        todos = await TodoModel.find()
+    }
     res.json(todos.map(mapTodo))
 }
 
