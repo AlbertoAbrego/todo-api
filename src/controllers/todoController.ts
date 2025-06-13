@@ -1,58 +1,71 @@
 import { Request, Response } from 'express'
 import { todos, saveTodos } from '../data/todos'
-import { Todo } from '../types/todo'
-import { v4 as uuidv4 } from 'uuid'
+import { TodoModel } from '../models/todo'
+import { mapTodo } from '../utils/mapTodo'
 
-export const getTodos = (req: Request, res: Response) => {
+export const getTodos = async (req: Request, res: Response) => {
     const { completed } = req.query
-    if (completed === 'true' || completed === 'false') {
-        const filtered = todos.filter(
-            (todo) => todo.completed === (completed === 'true')
-        )
-        return res.json(filtered)
-    }
-    res.json(todos)
+    const todos = await TodoModel.find()
+    // if (completed === 'true' || completed === 'false') {
+    //     const filtered = todos.filter(
+    //         (todo) => todo.completed === (completed === 'true')
+    //     )
+    //     return res.json(filtered)
+    // }
+    res.json(todos.map(mapTodo))
 }
 
 export const getTodoById = (req: Request, res: Response) => {
-    res.json(req.todo)
-}
-
-export const createTodo = (req: Request, res: Response) => {
-    const { title } = req.body
-    const newTodo: Todo = {
-        id: uuidv4(),
-        title,
-        completed: false,
+    const todo = req.todo
+    if (!todo) {
+        return res.status(404).json({ error: 'Todo not found' })
     }
-
-    todos.push(newTodo)
-    saveTodos()
-    res.status(201).json(newTodo)
+    res.json(mapTodo(todo))
 }
 
-export const toggleTodo = (req: Request, res: Response) => {
-    req.todo!.completed = !req.todo!.completed
-    saveTodos()
-    res.json(req.todo)
+export const createTodo = async (req: Request, res: Response) => {
+    const { title } = req.body
+    if (!title || typeof title !== 'string' || title.trim() === '') {
+        return res
+            .status(400)
+            .json({ error: 'Title is required and must be a string.' })
+    }
+    const newTodo = new TodoModel({ title })
+    await newTodo.save()
+    res.status(201).json(mapTodo(newTodo))
 }
 
-export const updateTodo = (req: Request, res: Response) => {
-    req.todo!.title = req.body.title
-    saveTodos()
-    res.json(req.todo)
+export const toggleTodo = async (req: Request, res: Response) => {
+    const todo = req.todo
+    if (!todo) {
+        return res.status(404).json({ error: 'Todo not found' })
+    }
+    todo.completed = !todo.completed
+    await todo.save()
+    res.json(mapTodo(todo))
 }
 
-export const deleteTodo = (req: Request, res: Response) => {
-    const index = todos.findIndex((t) => t.id === req.todo!.id)
-    todos.splice(index, 1)
-    saveTodos()
-    res.status(204).send()
+export const updateTodo = async (req: Request, res: Response) => {
+    const { title } = req.body
+    const todo = req.todo
+    if (!todo) {
+        return res.status(404).json({ error: 'Todo not found' })
+    }
+    todo.title = title
+    await todo.save()
+    res.json(mapTodo(todo))
 }
 
-export const deleteCompletedTodos = (_req: Request, res: Response) => {
-    const remaining = todos.filter((t) => !t.completed)
-    todos.splice(0, todos.length, ...remaining)
-    saveTodos()
-    res.json({ message: 'completed todos deleted' })
+export const deleteTodo = async (req: Request, res: Response) => {
+    const todo = req.todo
+    if (!todo) {
+        return res.status(404).json({ error: 'Todo not found' })
+    }
+    await todo.deleteOne()
+    res.sendStatus(204)
+}
+
+export const deleteCompletedTodos = async (_req: Request, res: Response) => {
+    const result = await TodoModel.deleteMany({ completed: true })
+    res.json({ message: `${result} completed todos deleted` })
 }

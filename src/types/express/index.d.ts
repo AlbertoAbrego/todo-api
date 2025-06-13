@@ -1,7 +1,7 @@
-import { Todo } from '../todo'
+import { ITodo } from '../../models/todo'
 
-declare module 'express' {
+declare module 'express-serve-static-core' {
     interface Request {
-        todo?: Todo
+        todo?: ITodo
     }
 }

@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import todoRoutes from './routes/todos'
 import authRoutes from './routes/auth'
@@ -10,6 +11,14 @@ import { authenticateToken } from './middleware/auth'
 loadTodos()
 
 dotenv.config()
+
+mongoose
+    .connect(process.env.MONGODB_URI!)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => {
+        console.error('MongoDB connection error:', err)
+        process.exit(1)
+    })
 
 const app = express()
 const PORT = process.env.PORT || 3000

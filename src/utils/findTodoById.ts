@@ -1,6 +1,5 @@
-import { todos } from '../data/todos'
-import { Todo } from '../types/todo'
+import { ITodo, TodoModel } from '../models/todo'
 
-export const findTodoById = (id: string): Todo | undefined => {
-    return todos.find((todo) => todo.id === id)
+export const findTodoById = async (id: string): Promise<ITodo | null> => {
+    return await TodoModel.findById(id)
 }
